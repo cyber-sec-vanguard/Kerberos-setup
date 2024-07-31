@@ -1,4 +1,4 @@
-#Kerberos setup script
+# Kerberos setup script
 Hello and welcome.
 I have created this script to easen the process of setting up the Kerberos server. I have set some goals:
   1. Initialize the realm.
