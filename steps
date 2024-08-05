@@ -1,0 +1,20 @@
+Project goals:
+	Set up of Kerberos KDC server.
+	Set up of a service.
+	The set up of Kerberos administrative server should be done manually, so I will not automate it.
+	Change realm name
+
+Steps:
+	1. edit on the /etc/krb5.conf to add the domain to [domain_realm] and the logs.
+	2. edit on /etc/hosts to configure the IP address.
+	3. access kadmin.local.
+	4. add admin_name/admin, set up a password chosen by the user.
+	5. add users to their domain and set up their initial password.
+	6. add the services if desired and propagate their keytab to the home directory.
+	7. safely transfer the keytab to the service machine if wanted.
+	8. IF the service is Apache2 HTTP, then:
+		o Install mod-auth-gssapi
+		o Configure the Apache2 files to use Kerberos
+
+Future Goals:
+	O Scalability: add more services along your way.	
