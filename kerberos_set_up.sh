@@ -1,5 +1,34 @@
 #!/bin/bash
 
+# function to inistalize the kerveros server
+
+init_serv () {
+
+
+
+
+	while : ; do
+		echo "Please, choose one option"
+		echo "1. Add admin"
+		echo "2. Add normal user"
+		echo "3. Add service"
+		echo "0. Abort"
+		read choice
+		if [ $choice == 0 ] ; then
+			return 0
+		elif [ $choice == 1 ] ; then
+			echo "Enter admin name"
+			read name
+			
+			echo "enter his password"
+			read -s passwd
+
+			echo "Adding.."
+			./add_principal.expect "$name" "$passwd"
+		fi
+	done
+}
+
 # Function to create the realm, parses two files /etc/hosts and /etc/krb5.conf and adds what needs to be added.
 init () {
 	sudo krb5_newrealm
@@ -26,7 +55,7 @@ input () {
 			init "$realm_domain"			
 			break
         	else   
-                        echo "Please follow the correct format (it must be something like EXAMPLE.COM)"
+                       echo "Please follow the correct format (it must be something like EXAMPLE.COM)"
 			read realm_domain
 		fi
 	done
@@ -39,9 +68,13 @@ main() {
 	echo "I will help you to set up the kerberos files, principals, and services. For now, no service files are automatically configured, so you have to do them manually.\nFirstly, let's download Kerberosn\nNOTE: You will be prompted to add the realm domain, the KDC server domain, and the administrative server domain. You MUST remember your input, we need it to work.\nThe realm domain will be in this format: 'EXAMPLE.COM' in uppercase. The KDC server domain will be in this format: 'krb1.example.com'. The administrative server domain can be identical to the KDC server domain name\n"
 
 	# Download and install kerberos. If it is already installed, this will update it, or do nothing.
-	sudo apt update
-	sudo apt install krb5-{kdc,admin-server}
+	#sudo apt update
+	#sudo apt install krb5-{kdc,admin-server}
 
-	# Read the domain names
-	input
+	# initalize the domain names
+	#input
+	
+	# initialize admin server
+	init_serv
 }
+main
