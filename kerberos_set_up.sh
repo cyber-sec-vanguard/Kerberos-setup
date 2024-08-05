@@ -3,10 +3,6 @@
 # function to inistalize the kerveros server
 
 init_serv () {
-
-
-
-
 	while : ; do
 		echo "Please, choose one option"
 		echo "1. Add admin"
@@ -24,7 +20,7 @@ init_serv () {
 			read -s passwd
 
 			echo "Adding.."
-			./add_princ.expect "$name" "$passwd" "$choice"
+			./add_princ.expect "$name" "$passwd" "" "$choice"
 		elif [ $choice == 2 ] ; then
 			echo "Enter admin name"
                         read name
@@ -33,7 +29,29 @@ init_serv () {
                         read -s passwd
 
                         echo "Adding.."
-                        ./add_princ.expect "$name" "$passwd" "$choice"
+                        ./add_princ.expect "$name" "$passwd" "" "$choice"
+		elif [ $choice == 3 ] ; then 
+			echo "Enter service name"
+			read service
+
+			echo "enter hostname. It must be in this format <service.example.domainname.com>. Mak sure it is correct, the program will not verify its validity."
+                        read hostname
+
+			echo "Does the service reside not on this machine? (yes/no)"
+			read reside
+			while [[ $reside != "yes" && $reside != "no" ]] ; do
+				echo "invalid answer"
+		       		read reside
+			done		
+			if [ $reside == "yes" ] ; then
+				echo "Please enter the machine's username"
+				read username
+                        	echo "Adding.."
+				touch ~/service.keytab
+				./add_princ.expect "$service" "" "$hostname" "$choice" "$reside" "$username"
+				echo "Done. Make sure to securily transfer the file to the host destination"
+
+			fi
 		fi
 	done
 }
@@ -74,7 +92,7 @@ main() {
 
 
 
-	echo "I will help you to set up the kerberos files, principals, and services. For now, no service files are automatically configured, so you have to do them manually.\nFirstly, let's download Kerberosn\nNOTE: You will be prompted to add the realm domain, the KDC server domain, and the administrative server domain. You MUST remember your input, we need it to work.\nThe realm domain will be in this format: 'EXAMPLE.COM' in uppercase. The KDC server domain will be in this format: 'krb1.example.com'. The administrative server domain can be identical to the KDC server domain name\n"
+	echo "I will help you to set up the kerberos files, principals, and services. For now, no service files are automatically configured, so you have to do them manually.\rFirstly, let's download Kerberosn\rNOTE: You will be prompted to add the realm domain, the KDC server domain, and the administrative server domain. You MUST remember your input, we need it to work.\rThe realm domain will be in this format: 'EXAMPLE.COM' in uppercase. The KDC server domain will be in this format: 'krb1.example.com'. The administrative server domain can be identical to the KDC server domain name\r"
 
 	# Download and install kerberos. If it is already installed, this will update it, or do nothing.
 	#sudo apt update
