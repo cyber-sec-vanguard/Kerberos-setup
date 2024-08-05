@@ -24,7 +24,16 @@ init_serv () {
 			read -s passwd
 
 			echo "Adding.."
-			./add_principal.expect "$name" "$passwd"
+			./add_princ.expect "$name" "$passwd" "$choice"
+		elif [ $choice == 2 ] ; then
+			echo "Enter admin name"
+                        read name
+
+                        echo "enter his password"
+                        read -s passwd
+
+                        echo "Adding.."
+                        ./add_princ.expect "$name" "$passwd" "$choice"
 		fi
 	done
 }
