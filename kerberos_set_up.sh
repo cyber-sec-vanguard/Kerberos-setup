@@ -49,10 +49,43 @@ init_serv () {
                         	echo "Adding.."
 				touch ~/service.keytab
 				./add_princ.expect "$service" "" "$hostname" "$choice" "$reside" "$username"
-				echo "Done. Make sure to securily transfer the file to the host destination"
-
+				echo "Done. Make sure to use 'chown' and 'chmod' to set the right access controls to this file. This access must be granted for the service exlusivly, set the user to this server, and the group to this server, and give nothing for others. If this service resides on another machine, then securily transfer the file to the host destination"
 			fi
 		fi
+		echo "If the service was Apache2 for HTTP, do you want to set it up on THIS machine? (yes/no)"
+		read choice
+                while [[ $choice != "yes" && $choice != "no" ]] ; do
+                	echo "invalid answer"
+                       	read choice
+                done
+		sudo apt install libapache2-mod-auth-gssapi
+		sudo a2enmod auth_gssapi
+		sudo a2enmod ssl
+		sudo systemctl restart apache2
+		# Edit the /etc/apache2/available-sites/000-default.conf file
+		# Firstly: add 'ServerName webmaster@domain.com
+        	sudo sed -i "/www.example.com/c\\ServerName $domain.com\n" /etc/apache2/sites-available
+                sudo sed "/webmaster/c\\ServerAdmin webmaster@$domain.com\n" /etc/apache2/sites-available
+		match="/DocumentRoot /var/www/html/"
+		new_lines="
+		<Location />\n
+		AuthType GSSAPI\n
+                AuthName \"Kerberos Login\"\n
+                GSSAPICredStore keytab:/home/$domain/apache2.keytab\n
+                GssapiAllowedMech krb5\n
+                GssapiBasicAuth on\n
+                GssapiLocalName on\n
+                GssapiUseSessions on\n
+                #GssapiLocalName on\n
+                #GssapiSSLonly on\n
+                #GSSAPIAuthentication on\n
+                #GSSAPILeanupCredentials on\n
+                Require valid-user\n
+        	</Location>\n
+		"
+		sudo sed -i "/$match/a\\$new_lines" /etc/apache2/sites-available
+		sudo systemctl restart apache2
+		echo "Done. Test the configuration now. Note that this is as far as I can help you. Common solutions: use 'sudo chown www-data:www-data /home/$domain/apache2.keytab' and 'sudo chmod 600 /home/$domain/apache2.keytab'"
 	done
 }
 
