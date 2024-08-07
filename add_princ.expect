@@ -1,0 +1,38 @@
+#!/usr/bin/expect
+
+# Arguments passed to the script
+set princ [lindex $argv 0]
+set password [lindex $argv 1]
+set hostname [lindex $argv 2]
+set reside [lindex $argv 4]
+set choice [lindex $argv 3]
+set username [lindex $argv 5]
+
+if { $choice == 1 } {
+	spawn kadmin.local
+	expect "kadmin.local:  " { send "addprinc $princ/admin\r" }
+	expect "Enter password for principal" { send "$password\r" }
+	expect "Re-enter password for principal" { send "$password\r" }
+	expect "kadmin.local:  " { send "quit\r" }
+	expect eof
+} elseif { $choice == 2 } {
+	spawn kadmin.local
+	expect "kadmin.local:  " { send "addprinc $princ\r" }
+	expect "Enter password for principal" { send "$password\r" }
+	expect "Re-enter password for principal" { send "$password\r" }
+	expect "kadmin.local:  " { send "quit\r" }
+	expect eof
+} elseif { $choice == 3 } {
+	spawn kadmin.local
+	# The syntax is: `addprinc -randkey service/hostname
+	# randkey for random key
+	# service is the service name
+	# hostname is the service_hostname.example.com
+	expect "kadmin.local:  " { send "addprinc -randkey $princ/$hostname\r" }
+	expect "kadmin.local:  " { send "ktadd $princ/$hostname\r" }
+	if { $reside eq "yes" } { 
+		expect "kadmin.local:  " { send "ktadd -k /home/$username/service.keytab $princ/$hostname\r" }
+	}
+	expect "kadmin.local:  " { send "quit\r" }
+        expect eof
+}
