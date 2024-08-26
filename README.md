@@ -1,6 +1,9 @@
 # Kerberos setup script
 Hello and welcome.\
-	These two scripts shall easen the process of setting up the Kerberos server on Ubuntu environment.\
+#### Note
+I shall revise this project.\
+## Description
+These two scripts shall easen the process of setting up the Kerberos server on Ubuntu environment.\
 	The two scripts will not touch the encryption, you'll have to adjust it yourself. They also don't touch the ACL. I shall return to this project in the future and add these two features; with an eye towards the creation of MLS systems.\
 	Excluding the inital realm creation (that is done in the installation phase), and what the program does not feature, you dont have to do anything manually.
 	The two scripts do the following.\
