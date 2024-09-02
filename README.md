@@ -1,7 +1,8 @@
 # Kerberos setup script
 Hello and welcome.
 #### Note
-I shall revise this project.
+I shall revise this project.\
+I should go back to my virtual lab, revise the configuration, ensure that it is indeed secure, and robust enough, then upload that project. Following up, I shall revise the automation scripts, then upload them afterwards. I do not know when, but it must be done ASAP.
 ## Description
 These two scripts shall easen the process of setting up the Kerberos server on Ubuntu environment.\
 	The two scripts will not touch the encryption, you'll have to adjust it yourself. They also don't touch the ACL. I shall return to this project in the future and add these two features; with an eye towards the creation of MLS systems.\
